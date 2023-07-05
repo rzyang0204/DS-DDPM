@@ -30,6 +30,9 @@ import scipy.io as sio
 import csv
 import math
 
+# do the preprocessing to the input eeg
+from datautils import mat_extractor
+
 # subject_instance = UNet_sub()
 
 class ArcMarginProduct(nn.Module):
