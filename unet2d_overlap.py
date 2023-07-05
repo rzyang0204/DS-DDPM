@@ -318,6 +318,7 @@ class DenoiseDiffusion:
         if debug:
             print("the shape of x0")
             print(x0.shape)
+        #随机生成t
         t = torch.randint(0, self.n_steps, (batch_size,), device=x0.device, dtype=torch.long)
         # s = torch.randint(0, self.subject_noise_range, (batch_size,), device=x0.device, dtype=torch.long)
         s = label
@@ -327,6 +328,7 @@ class DenoiseDiffusion:
             print(t)
         # $\epsilon \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$
         if noise is None:
+            #如果输入的noise为None，则生成一个与x0形状相同的随机噪声
             noise = torch.randn_like(x0)
             if debug:
                 print("the shape of noise")
@@ -499,7 +501,7 @@ class Configs(BaseConfigs):
                             device=self.device)
 
             # Remove noise for $T$ steps
-            for t_ in monit.iterate('Sample', self.n_steps):
+            for t_ in monit.iterate('Sample', self.n_steps):#self.n_steps是时间步数
                 # $t$
                 t = self.n_steps - t_ - 1
                 # Sample from $\textcolor{lightgreen}{p_\theta}(x_{t-1}|x_t)$
@@ -535,7 +537,7 @@ class Configs(BaseConfigs):
 
             # Compute gradients
             loss.backward()
-            # Take an optimization step
+            # Take an optimization step更新参数
             self.optimizer.step()
             self.optimizer_noise.step()
             # Track the loss
@@ -563,7 +565,7 @@ class Configs(BaseConfigs):
             # New line in the console
             tracker.new_line()
             # Save the model
-            if inicator % 30 == 0:
+            if inicator % 30 == 0: #每30个epoches打印一次
                 experiment.save_checkpoint()
 
 
